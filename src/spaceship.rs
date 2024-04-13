@@ -13,8 +13,6 @@ struct SpaceshipBundle {
 	model: SceneBundle,
 }
 
-
-
 pub struct SpaceshipPlugin;
 
 impl Plugin for SpaceshipPlugin {
