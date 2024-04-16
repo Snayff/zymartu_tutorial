@@ -6,6 +6,7 @@ mod asteroids;
 mod asset_loader;
 mod collision_detection;
 mod despawn;
+mod schedule;
 
 use bevy::prelude::*;
 use crate::asset_loader::AssetLoaderPlugin;
@@ -36,6 +37,7 @@ fn main() {
 		.add_plugins(MovementPlugin)
 		.add_plugins(CollisionDetectionPlugin)
 		.add_plugins(DespawnPlugin)
+		.add_plugins(SchedulePlugin)
 		//.add_plugins(DebugPlugin)
 		
 		.run()

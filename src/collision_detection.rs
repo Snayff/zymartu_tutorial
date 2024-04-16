@@ -1,5 +1,8 @@
 use bevy::prelude::*;
 use bevy::utils::HashMap;
+use crate::asteroids::Asteroid;
+use crate::schedule::InGameSet;
+use crate::spaceship::Spaceship;
 
 #[derive(Component, Debug)]
 pub struct Collider {
@@ -20,7 +23,18 @@ pub struct CollisionDetectionPlugin;
 
 impl Plugin for CollisionDetectionPlugin {
 	fn build(&self, app: &mut App) {
-		app.add_systems(Update, collision_detection);
+		app.add_systems(
+			Update,
+			collision_detection.in_set(InGameSet::CollisionDetection),
+		)
+			.add_systems(
+				Update,
+				(
+					handle_collisions::<Asteroid>,
+					handle_collisions::<Spaceship>,
+				)
+					.in_set(InGameSet::DespawnEntities),
+			);
 	}
 }
 
@@ -52,6 +66,25 @@ fn collision_detection(mut query: Query<(Entity, &GlobalTransform, &mut Collider
 			collider
 				.colliding_entities
 				.extend(collisions.iter().copied());
+		}
+	}
+}
+
+
+fn handle_collisions<T: Component>(
+	mut commands: Commands,
+	query: Query<(Entity, &Collider), With<T>>,
+) {
+	for (entity, collider) in query.iter() {
+		for &collided_entity in collider.colliding_entities.iter() {
+			// entity  collided with another entity of same type
+			if query.get(collided_entity).is_ok() {
+				continue;
+			}
+
+			// entity hit something that isnt of same type 
+			// despawn
+			commands.entity(entity).despawn_recursive();
 		}
 	}
 }

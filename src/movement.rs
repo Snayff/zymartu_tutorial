@@ -2,6 +2,7 @@ use bevy::app::{App, Plugin, Update};
 use bevy::math::Vec3;
 use bevy::prelude::*;
 use crate::collision_detection::Collider;
+use crate::schedule::InGameSet;
 
 
 #[derive(Component, Debug)]
@@ -43,7 +44,12 @@ pub struct MovementPlugin;
 
 impl Plugin for MovementPlugin {
 	fn build(&self, app: &mut App) {
-		app.add_systems(Update, (update_velocity, update_position));
+		app.add_systems(
+			Update, 
+			(update_velocity, update_position)
+				.chain()
+				.in_set(InGameSet::EntityUpdates),
+		);
 	}
 }
 
