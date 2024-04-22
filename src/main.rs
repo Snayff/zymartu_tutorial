@@ -7,6 +7,8 @@ mod asset_loader;
 mod collision_detection;
 mod despawn;
 mod schedule;
+mod state;
+mod health;
 
 use bevy::prelude::*;
 use crate::asset_loader::AssetLoaderPlugin;
@@ -16,7 +18,9 @@ use crate::collision_detection::CollisionDetectionPlugin;
 use crate::debug::DebugPlugin;
 use crate::despawn::DespawnPlugin;
 use crate::movement::MovementPlugin;
+use crate::schedule::SchedulePlugin;
 use crate::spaceship::SpaceshipPlugin;
+use crate::state::StatePlugin;
 
 
 fn main() {
@@ -38,6 +42,7 @@ fn main() {
 		.add_plugins(CollisionDetectionPlugin)
 		.add_plugins(DespawnPlugin)
 		.add_plugins(SchedulePlugin)
+		.add_plugins(StatePlugin)
 		//.add_plugins(DebugPlugin)
 		
 		.run()
