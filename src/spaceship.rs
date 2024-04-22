@@ -88,7 +88,7 @@ fn spaceship_movement_controls(
 	keyboard_input: Res<ButtonInput<KeyCode>>,
 	time: Res<Time>,
 ) {
-	let Ok((mut transform, mut velocity)) = 
+	let Ok((mut transform, mut velocity)) =
 		query.get_single_mut() else {
 		return; // dont panic if spaceship despawned, just exit
 	};
@@ -116,7 +116,7 @@ fn spaceship_movement_controls(
 	} else if keyboard_input.pressed(KeyCode::ControlLeft) {
 		roll = SPACESHIP_ROLL_SPEED * time.delta_seconds();
 	}
-	
+
 	// rotate around the Y axis
 	// ignore the z axis rotation. forces remaining on 0 z axis.
 	transform.rotate_y(rotation);
@@ -137,7 +137,9 @@ fn spaceship_weapon_controls(
 	keyboard_input: Res<ButtonInput<KeyCode>>,
 	scene_assets: Res<SceneAssets>,
 ) {
-	let transform = query.single();
+	let Ok(transform) = query.get_single() else {
+		return;
+	};
 
 	if keyboard_input.pressed(KeyCode::Space) {
 		commands.spawn(
@@ -170,14 +172,14 @@ fn spaceship_shield_controls(
 	let Ok(spaceship) = query.get_single() else {
 		return;
 	};
-	
+
 	if keyboard_input.pressed(KeyCode::Tab) {
 		commands.entity(spaceship).insert(SpaceshipShield);
 	}
 }
 
 fn spaceship_destroyed(
-	mut next_state: ResMut<NextState<GameState>>, 
+	mut next_state: ResMut<NextState<GameState>>,
 	query: Query<(), With<Spaceship>>
 ) {
 	if query.get_single().is_err() {
